@@ -14,3 +14,9 @@ app.use('/api/perfis', perfisRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor a rodar na porta ${PORT}`));
+
+// 1. Importa as rotas novas (podes colocar perto da linha dos perfis)
+const mensagensRoutes = require('./routes/mensagens');
+
+// 2. Usa as rotas (podes colocar abaixo do app.use dos perfis)
+app.use('/api/mensagens', mensagensRoutes);
