@@ -1,30 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const supabase = require('../data/supabase'); // Importa a ligação que já tens pronta
+const supabase = require('../data/supabase');
 
-// ROTA PARA GUARDAR UMA MENSAGEM
+// Postar Mensagem
 router.post('/postar', async (req, res) => {
     const { conteudo, autor, destinatario } = req.body;
+    try {
+        const { data, error } = await supabase
+            .from('mensagens')
+            .insert([{ conteudo, autor, destinatario }]);
 
-    // "mensagens" deve ser o nome da tabela que criaste no Supabase
-    const { data, error } = await supabase
-        .from('mensagens')
-        .insert([{ 
-            conteudo: conteudo, 
-            autor: autor, 
-            destinatario: destinatario 
-        }]);
-
-    if (error) return res.status(400).json(error);
-    res.status(201).json({ message: "Mensagem salva!" });
+        if (error) throw error;
+        res.status(201).json({ message: "Mensagem salva no baú!" });
+    } catch (error) {
+        res.status(400).json(error);
+    }
 });
 
-// ROTA PARA BUSCAR AS MENSAGENS (Para o Feed aparecer sempre cheio)
+// Buscar todas as mensagens
 router.get('/todas', async (req, res) => {
     const { data, error } = await supabase
         .from('mensagens')
         .select('*')
-        .order('created_at', { ascending: false }); // Mostra as mais recentes primeiro
+        .order('created_at', { ascending: false });
 
     if (error) return res.status(400).json(error);
     res.json(data);
