@@ -8,7 +8,7 @@ router.post('/cadastro', async (req, res) => {
     try {
         const { data, error } = await supabase
             .from('perfis')
-            .insert([{ nome, email, senha }]);
+            .insert([{ nome_completo: nome, email_perfil: email, senha_perfil: senha }]);
 
         if (error) throw error;
         res.status(201).json({ message: "Usuário criado com sucesso!" });
